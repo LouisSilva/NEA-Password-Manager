@@ -8,13 +8,20 @@ class PasswordManagerGui(QMainWindow):
     def __init__(self):
         super(PasswordManagerGui, self).__init__()
         loadUi("PasswordManagerGui.ui", self)
-        self.pushButtonAdd.clicked.connect(self.openDialogAdd)
+        self.pushButtonAdd.clicked.connect(self.__openDialogAdd)
 
 
-    def openDialogAdd(self):
+    def __openDialogAdd(self):
         # widget.setCurrentIndex(widget.currentIndex()+1)
-        dialog = loadUi("dialogAdd.ui")
-        dialog.exec()
+        self.dialogAdd = loadUi("dialogAdd.ui")
+        self.dialogAdd.pushButtonClear.clicked.connect(self.__clearRow)
+        self.dialogAdd.exec()
+
+    def __clearRow(self):
+        self.dialogAdd.lineEditUsernameInsert.clear()
+        self.dialogAdd.lineEditEmailInsert.clear()
+        self.dialogAdd.lineEditPasswordInsert.clear()
+        self.dialogAdd.lineEditAppInsert.clear()
 
 
 if __name__ == "__main__":
