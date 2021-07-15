@@ -1,8 +1,4 @@
-import sys
-import sqlite3
-from PyQt5.uic import loadUi
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow
+from database import PasswordDatabase
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Hash import SHA512
 from Crypto.Random import get_random_bytes
@@ -12,33 +8,9 @@ from Crypto.Cipher import AES
 import re
 
 
-class PasswordManager(QMainWindow):
+class Crypto(PasswordDatabase):
     def __init__(self):
-        super(PasswordManager, self).__init__()
-        loadUi("PasswordManagerGui.ui", self)
-        self.pushButtonAdd.clicked.connect(self.__openDialogAdd)
-
-        self.conn = sqlite3.connect(":memory:")
-        self.curs = self.conn.cursor()
-        self.curs.execute("""CREATE TABLE IF NOT EXISTS passwords (
-                                                                     ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                                                                     Username TEXT,
-                                                                     Email TEXT,
-                                                                     Password TEXT NOT NULL,
-                                                                     App TEXT NOT NULL
-                                                                 );""")
-
-    def __openDialogAdd(self):
-        # widget.setCurrentIndex(widget.currentIndex()+1)
-        self.dialogAdd = loadUi("dialogAdd.ui")
-        self.dialogAdd.pushButtonClear.clicked.connect(self.__clearRow)
-        self.dialogAdd.exec()
-
-    def __clearRow(self):
-        self.dialogAdd.lineEditUsernameInsert.clear()
-        self.dialogAdd.lineEditEmailInsert.clear()
-        self.dialogAdd.lineEditPasswordInsert.clear()
-        self.dialogAdd.lineEditAppInsert.clear()
+        PasswordDatabase.__init__(self)
 
     def encrypt_db(self):
         db = self.get_database()
@@ -69,7 +41,6 @@ class PasswordManager(QMainWindow):
                 file.write(result + "\n")
 
     def decrypt_db(self):
-        records = []
         with open("passwords.txt", "r") as file:
             master_password = "password"
 
@@ -90,22 +61,11 @@ class PasswordManager(QMainWindow):
                 plaintext = cipher.decrypt_and_verify(jv['ciphertext'], jv['tag'])
 
                 plaintext = tuple(plaintext.decode().strip().split(","))
-                records.append(plaintext)
-
-        return records
+                self.insert_single_into_table(plaintext)
+                print(self.get_database())
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    widget = QtWidgets.QStackedWidget()
-
-    password_manager_gui = PasswordManager()
-    password_manager_gui.decrypt_db()
-
-    widget.addWidget(password_manager_gui)
-    widget.show()
-
-    try:
-        sys.exit(app.exec_())
-    except Exception as e:
-        print(e)
+    crypto = Crypto()
+    crypto.encrypt_db()
+    crypto.decrypt_db()
