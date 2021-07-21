@@ -12,6 +12,12 @@ from Crypto.Cipher import AES
 import re
 
 
+class WelcomeScreen(QDialog):
+    def __init__(self):
+        super(WelcomeScreen, self).__init__()
+        loadUi("welcomeScreen.ui")
+
+
 class PasswordManager(QMainWindow):
     def __init__(self):
         super(PasswordManager, self).__init__()
@@ -34,7 +40,7 @@ class PasswordManager(QMainWindow):
         self.dialogAdd.pushButtonClear.clicked.connect(self.__clearRow)
         self.dialogAdd.exec()
 
-    def __clearRow(self):
+    def __clearRowAddDialog(self):
         self.dialogAdd.lineEditUsernameInsert.clear()
         self.dialogAdd.lineEditEmailInsert.clear()
         self.dialogAdd.lineEditPasswordInsert.clear()
@@ -100,12 +106,16 @@ if __name__ == "__main__":
     widget = QtWidgets.QStackedWidget()
 
     password_manager_gui = PasswordManager()
-    password_manager_gui.decrypt_db()
+    welcomeScreen = WelcomeScreen()
 
-    widget.addWidget(password_manager_gui)
+    widget.addWidget(welcomeScreen)
+
+    widget.setFixedHeight(800)
+    widget.setFixedWidth(1200)
+
     widget.show()
 
     try:
         sys.exit(app.exec_())
-    except Exception as e:
-        print(e)
+    except Exception:
+        print("Exiting...")
