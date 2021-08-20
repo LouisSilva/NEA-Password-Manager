@@ -95,14 +95,25 @@ class PasswordManager(QMainWindow):
         return records
 
 
+class WelcomeScreen(QDialog):
+    def __init__(self):
+        super(WelcomeScreen, self).__init__()
+        loadUi("welcome_screen.ui", self)
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = QtWidgets.QStackedWidget()
 
-    password_manager_gui = PasswordManager()
-    password_manager_gui.decrypt_db()
+    welcome = WelcomeScreen()
+    # password_manager_gui = PasswordManager()
+    # password_manager_gui.decrypt_db()
+    # widget.addWidget(password_manager_gui)
+    widget.addWidget(welcome)
 
-    widget.addWidget(password_manager_gui)
+    widget.setFixedWidth(1200)
+    widget.setFixedHeight(800)
+
     widget.show()
 
     try:
