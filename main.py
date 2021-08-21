@@ -2,7 +2,7 @@ import sys
 import sqlite3
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow
+from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow, QFileDialog
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Hash import SHA512
 from Crypto.Random import get_random_bytes
@@ -68,37 +68,65 @@ class PasswordManager(QMainWindow):
                 print(result, "\n")
                 file.write(result + "\n")
 
-    def decrypt_db(self):
-        records = []
-        with open("passwords.txt", "r") as file:
-            master_password = "password"
-
-            for line in file:
-                stripped_line = line.strip()
-                ssalt = re.findall('''salt=b'(.*)',''', str(stripped_line))
-                salt = b64decode(ssalt[0])
-
-                key = PBKDF2(master_password, salt, 16, count=1000000, hmac_hash_module=SHA512)
-
-                json_input = re.findall("salt=b'.*',({.*})", str(stripped_line))
-                b64 = json.loads(json_input[0])
-                json_k = ['nonce', 'header', 'ciphertext', 'tag']
-                jv = {k: b64decode(b64[k]) for k in json_k}
-
-                cipher = AES.new(key, AES.MODE_GCM, nonce=jv['nonce'])
-                cipher.update(jv['header'])
-                plaintext = cipher.decrypt_and_verify(jv['ciphertext'], jv['tag'])
-
-                plaintext = tuple(plaintext.decode().strip().split(","))
-                records.append(plaintext)
-
-        return records
-
 
 class WelcomeScreen(QDialog):
     def __init__(self):
         super(WelcomeScreen, self).__init__()
         loadUi("welcome_screen.ui", self)
+        self.pushButtonLogin.clicked.connect(self.gotologin)
+
+    def gotologin(self):
+        login = LoginScreen()
+        widget.addWidget(login)
+        widget.setCurrentIndex(widget.currentIndex()+1)
+
+
+class LoginScreen(QDialog):
+    def __init__(self):
+        super(LoginScreen, self).__init__()
+        loadUi("login.ui", self)
+        self.lineEditMasterPassword.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.pushButtonLogin.clicked.connect(self.decrypt_db)
+        self.pushButtonChangePasswordDatabaseLocation.clicked.connect(self.change_password_database_location)
+
+    def change_password_database_location(self):
+        file_name = QFileDialog.getOpenFileName(self, 'Open Password Database File', r"C:", "Text files (*.txt)")
+        self.lineEditPasswordDatabaseLocation.setText(file_name[0])
+
+    def decrypt_db(self):
+        master_password = self.lineEditMasterPassword.text()
+        password_db_location = self.lineEditPasswordDatabaseLocation.text()
+
+        if len(master_password) == 0:
+            self.labelError.setText("Please input a master password")
+
+        elif len(password_db_location) == 0:
+            self.labelError.setText("Please input the file location for the master password")
+
+        else:
+
+            records = []
+            with open(password_db_location, "r") as file:
+                for line in file:
+                    stripped_line = line.strip()
+                    ssalt = re.findall('''salt=b'(.*)',''', str(stripped_line))
+                    salt = b64decode(ssalt[0])
+
+                    key = PBKDF2(master_password, salt, 16, count=1000000, hmac_hash_module=SHA512)
+
+                    json_input = re.findall("salt=b'.*',({.*})", str(stripped_line))
+                    b64 = json.loads(json_input[0])
+                    json_k = ['nonce', 'header', 'ciphertext', 'tag']
+                    jv = {k: b64decode(b64[k]) for k in json_k}
+
+                    cipher = AES.new(key, AES.MODE_GCM, nonce=jv['nonce'])
+                    cipher.update(jv['header'])
+                    plaintext = cipher.decrypt_and_verify(jv['ciphertext'], jv['tag'])
+
+                    plaintext = tuple(plaintext.decode().strip().split(","))
+                    records.append(plaintext)
+
+            print(records)
 
 
 if __name__ == "__main__":
