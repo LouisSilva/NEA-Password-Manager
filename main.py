@@ -81,12 +81,19 @@ class LoginScreen(QDialog):
             self.gotoPasswordManager()
 
 
-class PasswordManager(QMainWindow):
+class PasswordManager(QDialog):
     def __init__(self, records):
         super(PasswordManager, self).__init__()
-        loadUi("PasswordManagerGui.ui", self)
+        loadUi("PasswordManagerGuiNew.ui", self)
 
-        self.pushButtonAdd.clicked.connect(self.__openDialogAdd)
+        widget.setFixedWidth(847)
+
+        self.tableWidgetPasswords.setColumnWidth(0, 207.5)
+        self.tableWidgetPasswords.setColumnWidth(1, 207.5)
+        self.tableWidgetPasswords.setColumnWidth(2, 207.5)
+        self.tableWidgetPasswords.setColumnWidth(3, 207.5)
+
+        self.pushButtonAdd_2.clicked.connect(self.__openDialogAdd)
 
         self.records = records
 
@@ -103,11 +110,17 @@ class PasswordManager(QMainWindow):
         for record in records:
             try:
                 self.curs.execute(f"""INSERT INTO passwords
-                                            VALUES (NULL, ?, ?, ?, ?)""", record)
+                                            VALUES (NULL, ?, ?, ?)""", record)
                 self.conn.commit()
             except Exception as e:
                 print(e)
 
+    def load_data(self):
+        entries = [{"username": "bobie", "email": "bobbie@dickhead.com", "password": "123", "app": "dickhead.com"}]
+        row = 0
+        for entry in entries:
+            self.tableWidgetPasswords.setItem(row, 0, QtWidgets.QTableWidgetItem(entry["username"]))
+            row += 1
 
     def __openDialogAdd(self):
         # widget.setCurrentIndex(widget.currentIndex()+1)
@@ -123,7 +136,7 @@ class PasswordManager(QMainWindow):
 
     def encrypt_db(self):
         db = self.get_database()
-        master_password = 'password'
+        master_password = 'e'
 
         with open("passwords.txt", "w") as file:
             for i in range(len(db)):
@@ -166,3 +179,6 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     except Exception as e:
         print(e)
+
+
+# D:/Docs/Work/Home/New/Computer_Science/Programming/Python/Projects/NEA_PasswordManager/Code/Disguisable-Password-Manager/passwords.txt

@@ -13,8 +13,8 @@ class Crypto(PasswordDatabase):
         PasswordDatabase.__init__(self)
 
     def encrypt_db(self):
-        db = self.get_database()
-        master_password = 'password'
+        db = [('bobbie', 'bobbie@dickhead.com', 'dickhead', 'dickhead.com')]
+        master_password = 'e'
 
         with open("passwords.txt", "w") as file:
             for i in range(len(db)):
@@ -42,7 +42,7 @@ class Crypto(PasswordDatabase):
 
     def decrypt_db(self):
         with open("passwords.txt", "r") as file:
-            master_password = "password"
+            master_password = "e"
 
             for line in file:
                 stripped_line = line.strip()
@@ -61,8 +61,6 @@ class Crypto(PasswordDatabase):
                 plaintext = cipher.decrypt_and_verify(jv['ciphertext'], jv['tag'])
 
                 plaintext = tuple(plaintext.decode().strip().split(","))
-                self.insert_single_into_table(plaintext)
-                print(self.get_database())
 
 
 if __name__ == "__main__":
