@@ -21,7 +21,7 @@ class WelcomeScreen(QDialog):
     def gotoLogin(self):
         login = LoginScreen()
         widget.addWidget(login)
-        widget.setCurrentIndex(widget.currentIndex()+1)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
 
 class LoginScreen(QDialog):
@@ -88,14 +88,16 @@ class PasswordManager(QDialog):
 
         widget.setFixedWidth(847)
 
-        self.tableWidgetPasswords.setColumnWidth(0, 207.5)
-        self.tableWidgetPasswords.setColumnWidth(1, 207.5)
-        self.tableWidgetPasswords.setColumnWidth(2, 207.5)
-        self.tableWidgetPasswords.setColumnWidth(3, 207.5)
+        self.tableWidgetPasswords.setColumnWidth(0, 203.5)
+        self.tableWidgetPasswords.setColumnWidth(1, 203.5)
+        self.tableWidgetPasswords.setColumnWidth(2, 203.5)
+        self.tableWidgetPasswords.setColumnWidth(3, 204)
 
         self.pushButtonAdd_2.clicked.connect(self.__openDialogAdd)
+        self.pushButtonSearch.clicked.connect(self.search)
 
         self.records = records
+        print(self.records)
 
         self.conn = sqlite3.connect(":memory:")
         self.curs = self.conn.cursor()
@@ -107,20 +109,37 @@ class PasswordManager(QDialog):
                                                                      App TEXT NOT NULL
                                                                  );""")
 
-        for record in records:
+        for record in self.records:
             try:
                 self.curs.execute(f"""INSERT INTO passwords
-                                            VALUES (NULL, ?, ?, ?)""", record)
+                                            VALUES (NULL, ?, ?, ?, ?)""", record)
                 self.conn.commit()
             except Exception as e:
                 print(e)
 
-    def load_data(self):
-        entries = [{"username": "bobie", "email": "bobbie@dickhead.com", "password": "123", "app": "dickhead.com"}]
+        self.load_data("SELECT * FROM passwords")
+
+    def load_data(self, query):
+        self.tableWidgetPasswords.clear()
+        self.tableWidgetPasswords.setRowCount(len(self.records))
         row = 0
-        for entry in entries:
-            self.tableWidgetPasswords.setItem(row, 0, QtWidgets.QTableWidgetItem(entry["username"]))
+        for record in self.curs.execute(query):
+            self.tableWidgetPasswords.setItem(row, 0, QtWidgets.QTableWidgetItem(record[1]))
+            self.tableWidgetPasswords.setItem(row, 1, QtWidgets.QTableWidgetItem(record[2]))
+            self.tableWidgetPasswords.setItem(row, 2, QtWidgets.QTableWidgetItem(record[3]))
+            self.tableWidgetPasswords.setItem(row, 3, QtWidgets.QTableWidgetItem(record[4]))
+
             row += 1
+
+        self.tableWidgetPasswords.setRowCount(row)
+
+    def search(self):
+        keyword = self.lineEditSearchKeywords.text()
+        if keyword == "":
+            query = "SELECT * FROM passwords"
+        else:
+            query = f"SELECT * FROM passwords WHERE username='{keyword}' OR email='{keyword}' OR app='{keyword}';"
+        self.load_data(query)
 
     def __openDialogAdd(self):
         # widget.setCurrentIndex(widget.currentIndex()+1)
@@ -179,6 +198,5 @@ if __name__ == "__main__":
         sys.exit(app.exec_())
     except Exception as e:
         print(e)
-
 
 # D:/Docs/Work/Home/New/Computer_Science/Programming/Python/Projects/NEA_PasswordManager/Code/Disguisable-Password-Manager/passwords.txt
