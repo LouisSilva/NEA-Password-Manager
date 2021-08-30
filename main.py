@@ -93,7 +93,8 @@ class PasswordManager(QDialog):
         self.tableWidgetPasswords.setColumnWidth(2, 203.5)
         self.tableWidgetPasswords.setColumnWidth(3, 204)
 
-        self.pushButtonAdd.clicked.connect(self.openDialogAdd)
+        self.pushButtonAdd.clicked.connect(self.open_DialogAdd)
+        self.pushButtonDelete.clicked.connect(self.open_DialogDelete)
         self.pushButtonSearch.clicked.connect(self.search)
 
         self.records = records
@@ -141,20 +142,19 @@ class PasswordManager(QDialog):
             query = f"SELECT * FROM passwords WHERE username='{keyword}' OR email='{keyword}' OR app='{keyword}';"
         self.load_data(query)
 
-    def openDialogAdd(self):
-        # widget.setCurrentIndex(widget.currentIndex()+1)
+    def open_DialogAdd(self):
         self.dialogAdd = loadUi("dialogAdd.ui")
-        self.dialogAdd.pushButtonClear.clicked.connect(self.clearRowDialogAdd)
-        self.dialogAdd.pushButtonAdd.clicked.connect(self.addRecord)
+        self.dialogAdd.pushButtonClear.clicked.connect(self.clear_DialogAdd)
+        self.dialogAdd.pushButtonAdd.clicked.connect(self.add_record)
         self.dialogAdd.exec()
 
-    def clearRowDialogAdd(self):
+    def clear_DialogAdd(self):
         self.dialogAdd.lineEditUsername.clear()
         self.dialogAdd.lineEditEmail.clear()
         self.dialogAdd.lineEditPassword.clear()
         self.dialogAdd.lineEditApp.clear()
 
-    def addRecord(self):
+    def add_record(self):
         if len(self.dialogAdd.lineEditUsername.text()) == 0: print("U need to input something in username")
         elif len(self.dialogAdd.lineEditEmail.text()) == 0: print("U need to input something in email")
         elif len(self.dialogAdd.lineEditPassword.text()) == 0: print("U need to input something in password")
@@ -162,7 +162,7 @@ class PasswordManager(QDialog):
 
         else:
             try:
-                self.records.append((self.dialogAdd.lineEditUsername.text() + self.dialogAdd.lineEditEmail.text() + self.dialogAdd.lineEditPassword.text() + self.dialogAdd.lineEditApp.text()))
+                self.records.append((self.dialogAdd.lineEditUsername.text(), self.dialogAdd.lineEditEmail.text(), self.dialogAdd.lineEditPassword.text(), self.dialogAdd.lineEditApp.text()))
                 self.curs.execute(f"""INSERT INTO passwords
                                             VALUES (NULL, ?, ?, ?, ?)""", (self.dialogAdd.lineEditUsername.text(), self.dialogAdd.lineEditEmail.text(), self.dialogAdd.lineEditPassword.text(), self.dialogAdd.lineEditApp.text()))
                 self.conn.commit()
@@ -170,6 +170,38 @@ class PasswordManager(QDialog):
                 print(e)
 
         self.load_data("SELECT * FROM passwords")
+
+    def open_DialogDelete(self):
+        self.dialogDelete = loadUi("dialogDelete.ui")
+        self.dialogDelete.pushButtonDelete.clicked.connect(self.delete_record)
+
+        self.dialogDelete.comboBoxUsername.addItem("...")
+        self.dialogDelete.comboBoxEmail.addItem("...")
+        self.dialogDelete.comboBoxPassword.addItem("...")
+        self.dialogDelete.comboBoxApp.addItem("...")
+
+        for record in self.curs.execute("SELECT * FROM passwords"):
+            self.dialogDelete.comboBoxUsername.addItem(record[1])
+            self.dialogDelete.comboBoxEmail.addItem(record[2])
+            self.dialogDelete.comboBoxPassword.addItem(record[3])
+            self.dialogDelete.comboBoxApp.addItem(record[4])
+
+        self.dialogDelete.exec()
+
+    def delete_record(self):
+        try:
+            if self.dialogDelete.comboBoxUsername.currentText() == "...": print("You need to select a value for username")
+            elif self.dialogDelete.comboBoxEmail.currentText() == "...": print("You need to select a value for email")
+            elif self.dialogDelete.comboBoxPassword.currentText() == "...": print("You need to select a value for password")
+            elif self.dialogDelete.comboBoxApp.currentText() == "...": print("You need to select a value for app")
+
+            else:
+                self.curs.execute(f"DELETE FROM passwords WHERE username='{self.dialogDelete.comboBoxUsername.currentText()}' AND email='{self.dialogDelete.comboBoxEmail.currentText()}' AND password='{self.dialogDelete.comboBoxPassword.currentText()}' AND app='{self.dialogDelete.comboBoxApp.currentText()}';")
+                self.conn.commit()
+                self.load_data("SELECT * FROM passwords")
+
+        except Exception as e:
+            print(e)
 
     def encrypt_db(self):
         db = self.get_database()

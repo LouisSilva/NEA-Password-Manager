@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogAddRecord</class>
- <widget class="QDialog" name="DialogAddRecord">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>396</height>
+    <width>401</width>
+    <height>401</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,24 +46,6 @@ color: rgb(255, 255, 255);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEditUsername">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>10</y>
-      <width>271</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color:rgba(0,0,0,0);
-font: 12pt &quot;MS Shell Dlg 2&quot;;
-color:rgb(255, 255, 255)</string>
-    </property>
-    <property name="placeholderText">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelEmail">
     <property name="geometry">
      <rect>
@@ -82,24 +64,6 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditEmail">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>90</y>
-      <width>271</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color:rgba(0,0,0,0);
-font: 12pt &quot;MS Shell Dlg 2&quot;;
-color:rgb(255, 255, 255)</string>
-    </property>
-    <property name="placeholderText">
-     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="labelPassword">
@@ -122,24 +86,6 @@ color: rgb(255, 255, 255);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEditPassword">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>170</y>
-      <width>271</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color:rgba(0,0,0,0);
-font: 12pt &quot;MS Shell Dlg 2&quot;;
-color:rgb(255, 255, 255)</string>
-    </property>
-    <property name="placeholderText">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelApp">
     <property name="geometry">
      <rect>
@@ -160,31 +106,13 @@ color: rgb(255, 255, 255);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEditApp">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>250</y>
-      <width>271</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color:rgba(0,0,0,0);
-font: 12pt &quot;MS Shell Dlg 2&quot;;
-color:rgb(255, 255, 255)</string>
-    </property>
-    <property name="placeholderText">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonAdd">
+   <widget class="QPushButton" name="pushButtonDelete">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>270</x>
       <y>330</y>
       <width>101</width>
       <height>51</height>
@@ -197,29 +125,47 @@ font: 14pt &quot;MS Shell Dlg 2&quot;;
 border-radius:20px;</string>
     </property>
     <property name="text">
-     <string>Add</string>
+     <string>Delete</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonClear">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
+   <widget class="QComboBox" name="comboBoxUsername">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>330</y>
-      <width>101</width>
-      <height>51</height>
+      <x>180</x>
+      <y>20</y>
+      <width>141</width>
+      <height>31</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">color:rgb(255, 255, 255);
-background-color:rgb(59, 255, 37);
-font: 14pt &quot;MS Shell Dlg 2&quot;;
-border-radius:20px;</string>
+   </widget>
+   <widget class="QComboBox" name="comboBoxEmail">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>100</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
     </property>
-    <property name="text">
-     <string>Clear</string>
+   </widget>
+   <widget class="QComboBox" name="comboBoxPassword">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>180</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxApp">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>260</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
     </property>
    </widget>
   </widget>
