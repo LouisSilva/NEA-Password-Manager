@@ -93,7 +93,7 @@ class PasswordManager(QDialog):
         self.tableWidgetPasswords.setColumnWidth(2, 203.5)
         self.tableWidgetPasswords.setColumnWidth(3, 204)
 
-        self.pushButtonAdd_2.clicked.connect(self.__openDialogAdd)
+        self.pushButtonAdd.clicked.connect(self.openDialogAdd)
         self.pushButtonSearch.clicked.connect(self.search)
 
         self.records = records
@@ -141,17 +141,35 @@ class PasswordManager(QDialog):
             query = f"SELECT * FROM passwords WHERE username='{keyword}' OR email='{keyword}' OR app='{keyword}';"
         self.load_data(query)
 
-    def __openDialogAdd(self):
+    def openDialogAdd(self):
         # widget.setCurrentIndex(widget.currentIndex()+1)
         self.dialogAdd = loadUi("dialogAdd.ui")
-        self.dialogAdd.pushButtonClear.clicked.connect(self.__clearRow)
+        self.dialogAdd.pushButtonClear.clicked.connect(self.clearRowDialogAdd)
+        self.dialogAdd.pushButtonAdd.clicked.connect(self.addRecord)
         self.dialogAdd.exec()
 
-    def __clearRow(self):
-        self.dialogAdd.lineEditUsernameInsert.clear()
-        self.dialogAdd.lineEditEmailInsert.clear()
-        self.dialogAdd.lineEditPasswordInsert.clear()
-        self.dialogAdd.lineEditAppInsert.clear()
+    def clearRowDialogAdd(self):
+        self.dialogAdd.lineEditUsername.clear()
+        self.dialogAdd.lineEditEmail.clear()
+        self.dialogAdd.lineEditPassword.clear()
+        self.dialogAdd.lineEditApp.clear()
+
+    def addRecord(self):
+        if len(self.dialogAdd.lineEditUsername.text()) == 0: print("U need to input something in username")
+        elif len(self.dialogAdd.lineEditEmail.text()) == 0: print("U need to input something in email")
+        elif len(self.dialogAdd.lineEditPassword.text()) == 0: print("U need to input something in password")
+        elif len(self.dialogAdd.lineEditApp.text()) == 0: print("U need to input something in app")
+
+        else:
+            try:
+                self.records.append((self.dialogAdd.lineEditUsername.text() + self.dialogAdd.lineEditEmail.text() + self.dialogAdd.lineEditPassword.text() + self.dialogAdd.lineEditApp.text()))
+                self.curs.execute(f"""INSERT INTO passwords
+                                            VALUES (NULL, ?, ?, ?, ?)""", (self.dialogAdd.lineEditUsername.text(), self.dialogAdd.lineEditEmail.text(), self.dialogAdd.lineEditPassword.text(), self.dialogAdd.lineEditApp.text()))
+                self.conn.commit()
+            except Exception as e:
+                print(e)
+
+        self.load_data("SELECT * FROM passwords")
 
     def encrypt_db(self):
         db = self.get_database()
