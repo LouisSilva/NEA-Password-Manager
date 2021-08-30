@@ -203,6 +203,12 @@ class PasswordManager(QDialog):
         except Exception as e:
             print(e)
 
+    def open_DialogEdit(self):
+        pass
+
+    def edit_record(self):
+        pass
+
     def encrypt_db(self):
         db = self.get_database()
         master_password = 'e'
