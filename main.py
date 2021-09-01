@@ -38,7 +38,7 @@ class LoginScreen(QDialog):
         self.password_db_location = None
 
     def gotoPasswordManager(self):
-        password_manager = PasswordManager(self.records)
+        password_manager = PasswordManager(self.records, self.master_password)
         widget.addWidget(password_manager)
         widget.setCurrentIndex(widget.currentIndex() + 1)
 
@@ -82,11 +82,12 @@ class LoginScreen(QDialog):
 
 
 class PasswordManager(QDialog):
-    def __init__(self, records):
+    def __init__(self, records, master_password):
         super(PasswordManager, self).__init__()
         loadUi("PasswordManagerGuiNew.ui", self)
 
         widget.setFixedWidth(847)
+        widget.setFixedHeight(857)
 
         self.tableWidgetPasswords.setColumnWidth(0, 203.5)
         self.tableWidgetPasswords.setColumnWidth(1, 203.5)
@@ -96,8 +97,10 @@ class PasswordManager(QDialog):
         self.pushButtonAdd.clicked.connect(self.open_DialogAdd)
         self.pushButtonDelete.clicked.connect(self.open_DialogDelete)
         self.pushButtonSearch.clicked.connect(self.search)
+        self.pushButtonSave.clicked.connect(self.save)
 
         self.records = records
+        self.master = master_password
         print(self.records)
 
         self.conn = sqlite3.connect(":memory:")
@@ -210,8 +213,7 @@ class PasswordManager(QDialog):
         pass
 
     def encrypt_db(self):
-        db = self.get_database()
-        master_password = 'e'
+        db = self.curs.execute("SELECT * FROM passwords")
 
         with open("passwords.txt", "w") as file:
             for i in range(len(db)):
@@ -221,7 +223,7 @@ class PasswordManager(QDialog):
                 plaintext = ",".join(current_tuple)
 
                 salt = get_random_bytes(16)
-                key = PBKDF2(master_password, salt, 16, count=1000000, hmac_hash_module=SHA512)
+                key = PBKDF2(self.master, salt, 16, count=1000000, hmac_hash_module=SHA512)
 
                 file.write(f"salt={b64encode(salt)},")
 
@@ -236,6 +238,10 @@ class PasswordManager(QDialog):
 
                 print(result, "\n")
                 file.write(result + "\n")
+
+    def save(self):
+        self.encrypt_db()
+        sys.exit()
 
 
 if __name__ == "__main__":

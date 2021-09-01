@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>401</width>
-    <height>401</height>
+    <height>0</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -104,74 +104,6 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonDelete">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>330</y>
-      <width>101</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:rgb(255, 255, 255);
-background-color:rgb(59, 255, 37);
-font: 14pt &quot;MS Shell Dlg 2&quot;;
-border-radius:20px;</string>
-    </property>
-    <property name="text">
-     <string>Delete</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBoxUsername">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>20</y>
-      <width>141</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="editable">
-     <bool>false</bool>
-    </property>
-    <property name="currentText">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBoxEmail">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>100</y>
-      <width>141</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBoxPassword">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>180</y>
-      <width>141</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBoxApp">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>260</y>
-      <width>141</width>
-      <height>31</height>
-     </rect>
     </property>
    </widget>
   </widget>
