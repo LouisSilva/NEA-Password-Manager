@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>401</width>
-    <height>0</height>
+    <width>358</width>
+    <height>218</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,31 +26,11 @@
     <string notr="true">QWidget#widgetBackground{
 background-color:qlineargradient(spread:pad, x1:0.118751, y1:0.131, x2:0.960452, y2:0.954, stop:0 rgba(46, 49, 146, 255), stop:1 rgba(27, 255, 255, 255))}</string>
    </property>
-   <widget class="QLabel" name="labelUsername">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>10</y>
-      <width>111</width>
-      <height>58</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;MS Shell Dlg 2&quot;;
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Username:</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelEmail">
     <property name="geometry">
      <rect>
-      <x>-20</x>
-      <y>90</y>
+      <x>10</x>
+      <y>10</y>
       <width>111</width>
       <height>58</height>
      </rect>
@@ -66,31 +46,11 @@ color: rgb(255, 255, 255);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="labelPassword">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>170</y>
-      <width>111</width>
-      <height>58</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 15pt &quot;MS Shell Dlg 2&quot;;
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Password:</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelApp">
     <property name="geometry">
      <rect>
-      <x>-20</x>
-      <y>250</y>
+      <x>0</x>
+      <y>70</y>
       <width>111</width>
       <height>58</height>
      </rect>
@@ -104,6 +64,48 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonDelete">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>150</y>
+      <width>101</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:rgb(255, 255, 255);
+background-color:rgb(59, 255, 37);
+font: 14pt &quot;MS Shell Dlg 2&quot;;
+border-radius:20px;</string>
+    </property>
+    <property name="text">
+     <string>Delete</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxEmail">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>20</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxApp">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>90</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
     </property>
    </widget>
   </widget>
